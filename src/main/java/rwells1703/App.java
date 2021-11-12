@@ -1,31 +1,33 @@
 package rwells1703;
 
 import org.openimaj.image.DisplayUtilities;
+import org.openimaj.image.FImage;
+import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
-import org.openimaj.image.colour.ColourSpace;
-import org.openimaj.image.colour.RGBColour;
-import org.openimaj.image.processing.convolution.FGaussianConvolve;
-import org.openimaj.image.typography.hershey.HersheyFont;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * OpenIMAJ Hello world!
  *
  */
 public class App {
-    public static void main( String[] args ) {
-    	//Create an image
-        MBFImage image = new MBFImage(320,70, ColourSpace.RGB);
+    public static void main( String[] args ) throws IOException {
+    	// Load an image from a file
+        MBFImage image = ImageUtilities.readMBF(new File("images\\eye_orig.jpg"));
 
-        //Fill the image with white
-        image.fill(RGBColour.WHITE);
-        		        
-        //Render some test into the image
-        image.drawText("Hello World", 10, 60, HersheyFont.CURSIVE, 50, RGBColour.BLACK);
+        // Create the image kernel
+        float[][] kernel = {{1f,1f,1f},{1f,1f,1f},{1f,1f,1f}};
 
-        //Apply a Gaussian blur
-        image.processInplace(new FGaussianConvolve(2f));
-        
+        // Process the image
+        MBFImage processedImage = image.process(new MyConvolution(kernel));
+
+        // Create a display window
+        JFrame window = DisplayUtilities.createNamedWindow("main", "OpenIMAJ-Tutorial", true);
+
         //Display the image
-        DisplayUtilities.display(image);
+        DisplayUtilities.display(processedImage, window);
     }
 }
