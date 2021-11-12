@@ -1,56 +1,67 @@
 package rwells1703;
 
-import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.colour.RGBColour;
-import org.openimaj.image.processing.algorithm.FourierTransform;
 import org.openimaj.image.FImage;
 import org.openimaj.image.processor.SinglebandImageProcessor;
 import org.openimaj.math.geometry.shape.Rectangle;
 
-import javax.swing.*;
-
 public class MyConvolution implements SinglebandImageProcessor<Float, FImage> {
     private float[][] kernel;
+    private int templateWidth;
+    private int templateHeight;
 
     public MyConvolution(float[][] kernel) {
         //note that like the image pixels kernel is indexed by [row][column]
         this.kernel = kernel;
+        this.templateWidth = kernel[0].length;
+        this.templateHeight = kernel.length;
     }
 
     @Override
-    public void processImageFourier(FImage image) {
+    public void processImage(FImage image) {
         // convolve image with kernel and store result back in image
         //
         // hint: use FImage#internalAssign(FImage) to set the contents
         // of your temporary buffer image to the image.
 
         // Get image of the kernel
-        FImage template = image.clone();
-        template.fill(0f);
-        template.drawShapeFilled(new Rectangle(0f, 0f, 30f, 30f), RGBColour.WHITE[0]);
+        //FImage template = image.clone();
+        //template.fill(0f);
+        //template.drawShapeFilled(new Rectangle(0f, 0f, templateWidth, templateHeight), RGBColour.WHITE[0]);
 
-        // Fourier transform the image and its template
-        FourierTransform ftImage = new FourierTransform(image, true);
-        FourierTransform ftTemplate = new FourierTransform(template, true);
+        // Calculate zero border sizes
+        int horizontalBorderSize = (int) Math.ceil((double)(templateWidth - 1) / 2);
+        int verticalBorderSize = (int) Math.ceil((double)(templateHeight - 1) / 2);
 
-        // Multiply the two together
-        FImage magnitude = new FImage(image.getWidth(), image.getHeight());
-        FImage phase = new FImage(image.getWidth(), image.getHeight());
+        // Add border to the image
+        FImage borderedImage = new FImage(image.getWidth()+2*horizontalBorderSize, image.getHeight()+2*verticalBorderSize);
+        borderedImage.overlayInplace(image, horizontalBorderSize, verticalBorderSize);
 
-        image.internalAssign(magnitude);
+        FImage convolutedImage = new FImage(borderedImage.getWidth(), borderedImage.getHeight());
 
-        magnitude.addInplace(ftImage.getMagnitude().multiplyInplace(ftTemplate.getMagnitude()));
-        magnitude.subtractInplace(ftImage.getMagnitude().multiplyInplace(ftTemplate.getMagnitude()));
+        // Loop through all pixels in the bordered image
+        for (int x = templateWidth; x < borderedImage.getWidth() - templateWidth; x++) {
+            for (int y = templateHeight; y < borderedImage.getHeight() - templateHeight; y++) {
+                float newIntensity = 0;
 
-        phase.addInplace(ftImage.getMagnitude().multiplyInplace(ftTemplate.getPhase()));
-        phase.addInplace(ftTemplate.getMagnitude().multiplyInplace(ftTemplate.getMagnitude()));
+                // Loop through all pixels in the kernel/template
+                for (int kernelX = 0; kernelX < templateWidth; kernelX++) {
+                    for (int kernelY = 0; kernelY < templateHeight; kernelY++) {
+                        // Sum the products of the kernel and corresponding image pixels
+                        newIntensity += borderedImage.getPixel(x + kernelX, y + kernelY) * kernel[kernelX][kernelY];
+                    }
+                }
 
-        FourierTransform ftConvolutedImage = new FourierTransform(magnitude, phase, false);
+                // Add the new pixel to the convoluted image
+                convolutedImage.setPixel(x, y, newIntensity);
+            }
+        }
 
-        // Inverse the product to get the convoluted image
-        FImage inverseFourier = ftConvolutedImage.inverse();
+        // Divide the convoluted image by the total amount of pixels in the template
+        // This normalises the brightness
+        convolutedImage.divideInplace((float) (templateWidth*templateHeight));
 
-        // Overwrite the original image with the new convoluted image
-        //image.internalAssign(inverseFourier);
+        // Output the convoluted image
+        image.internalAssign(convolutedImage);
     }
 }

@@ -16,10 +16,10 @@ import java.io.IOException;
 public class App {
     public static void main( String[] args ) throws IOException {
     	// Load an image from a file
-        MBFImage image = ImageUtilities.readMBF(new File("images\\eye_orig.jpg"));
+        MBFImage image = ImageUtilities.readMBF(new File("images\\dog1.jpg"));
 
         // Create the image kernel
-        float[][] kernel = {{1f,1f,1f},{1f,1f,1f},{1f,1f,1f}};
+        float[][] kernel = new FImage(9, 9).fill(1f).pixels;
 
         // Process the image
         MBFImage processedImage = image.process(new MyConvolution(kernel));
