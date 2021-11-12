@@ -1,7 +1,6 @@
 package rwells1703;
 
 import org.openimaj.image.DisplayUtilities;
-import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 
@@ -15,19 +14,17 @@ import java.io.IOException;
  */
 public class App {
     public static void main( String[] args ) throws IOException {
-    	// Load an image from a file
-        MBFImage image = ImageUtilities.readMBF(new File("images\\dog1.jpg"));
+    	// Load an images from a file
+        MBFImage lowImage = ImageUtilities.readMBF(new File("images\\stop.png"));
+        MBFImage highImage = ImageUtilities.readMBF(new File("images\\lolly.png"));
 
-        // Create the image kernel
-        float[][] kernel = new FImage(9, 9).fill(1f).pixels;
-
-        // Process the image
-        MBFImage processedImage = image.process(new MyConvolution(kernel));
+        // Create a hybrid image
+        MBFImage hybridImage = MyHybridImages.makeHybrid(lowImage, 5f, highImage, 5f);
 
         // Create a display window
         JFrame window = DisplayUtilities.createNamedWindow("main", "OpenIMAJ-Tutorial", true);
 
         //Display the image
-        DisplayUtilities.display(processedImage, window);
+        DisplayUtilities.display(hybridImage, window);
     }
 }
