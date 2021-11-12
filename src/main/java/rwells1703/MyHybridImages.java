@@ -36,8 +36,10 @@ public class MyHybridImages {
         MBFImage processedHighImage = highImage.process(new MyConvolution(highKernel));
         processedHighImage.subtractInplace(highImage);
 
-        MBFImage averagedImage = processedLowImage.addInplace(processedHighImage);
-        averagedImage.divideInplace(2f);
+        float ratio = 0.6f;
+
+        MBFImage averagedImage = processedLowImage.multiplyInplace(ratio);
+        averagedImage.addInplace(processedHighImage.multiplyInplace(1-ratio));
 
         return averagedImage;
     }

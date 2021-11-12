@@ -52,10 +52,6 @@ public class MyConvolution implements SinglebandImageProcessor<Float, FImage> {
             }
         }
 
-        // Divide the convoluted image by the total amount of pixels in the template
-        // This normalises the brightness
-        //convolutedImage.divideInplace((float) (templateWidth*templateHeight));
-
         // Output the convoluted image
         image.internalAssign(convolutedImage);
     }
