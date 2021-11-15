@@ -12,8 +12,8 @@ A hybrid image will look like image A close up, but as you get further away will
 Image A (left) and image B (right):
 <br>
 <br>
-<img width="50%" src="/images/stop.png"/>
-<img width="50%" src="/images/lollipop cropped.png"/>
+<img width="40%" src="/images/stop.png"/>
+<img width="40%" src="/images/lollipop cropped.png"/>
 <br>
 <br>
 Hybrid image:
