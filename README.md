@@ -9,17 +9,17 @@ image A low + image B high = hybrid image
 A hybrid image will look like image A close up, but as you get further away will more closely resemble image B.
 <br>
 <br>
+Hybrid image:
+<br>
+<br>
+<img src="/images/outputs/hybrid.jpg"/>
+<br>
+<br>
 Image A (left) and image B (right):
 <br>
 <br>
 <img width="40%" src="/images/stop.png"/>
 <img width="40%" src="/images/lollipop cropped.png"/>
-<br>
-<br>
-Hybrid image:
-<br>
-<br>
-<img src="/images/outputs/hybrid.jpg"/>
 <br>
 <br>
 Hybrid image as a cascade (to demonstrate the effect of scaling):
