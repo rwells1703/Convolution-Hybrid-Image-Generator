@@ -15,16 +15,20 @@ public class App {
 
     public static void makeHybrid() throws IOException {
         // Load an images from a file
-        MBFImage lowImage = ImageUtilities.readMBF(new File("images\\data\\bird.bmp"));
-        MBFImage highImage = ImageUtilities.readMBF(new File("images\\data\\plane.bmp"));
+        MBFImage lowImage = ImageUtilities.readMBF(new File("images\\lollipop cropped.png"));
+        MBFImage highImage = ImageUtilities.readMBF(new File("images\\stop.png"));
 
         // Create a hybrid image
-        MBFImage hybridImage = MyHybridImages.makeHybrid(lowImage, 5f, highImage, 3f);
+        MBFImage hybridImage = MyHybridImages.makeHybrid(lowImage, 13f, highImage, 3f);
+        MBFImage hybridImageCascade = createImageCascade(hybridImage, 4, 20);
 
         // Save the image to a file
-        //ImageUtilities.write(hybridImage, new File("images\\outputs\\hybrid.jpg"));
+        ImageUtilities.write(hybridImage, new File("images\\outputs\\hybrid.jpg"));
 
-        //Display the image
+        // Save the image cascade to a file
+        ImageUtilities.write(hybridImageCascade, new File("images\\outputs\\cascade.jpg"));
+
+        //Display the image cascade
         DisplayUtilities.display(createImageCascade(hybridImage, 4, 20));
     }
 
